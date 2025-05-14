@@ -1,0 +1,33 @@
+#!/bin/bash
+file="students.txt"
+
+while true; do
+    echo "1. Add student"
+    echo "2. Display all students"
+    echo "3. Search student"
+    echo "4. Exit"
+    read -p "Enter choice: " choice
+
+    case $choice in
+        1)
+            read -p "Enter ID: " id
+            read -p "Enter name: " name
+            read -p "Enter score: " score
+            echo "$id:$name:$score" >> "$file"
+            ;;
+        2)
+            awk -F':' 'BEGIN { printf "%-10s %-20s %-10s\n", "ID", "Name", "Score" } 
+                       { printf "%-10s %-20s %-10s\n", $1, $2, $3 }' "$file"
+            ;;
+        3)
+            read -p "Enter search term: " term
+            awk -F':' -v term="$term" '$1 == term || $2 ~ term { printf "%-10s %-20s %-10s\n", $1, $2, $3 }' "$file"
+            ;;
+        4)
+            exit 0
+            ;;
+        *)
+            echo "Invalid choice"
+            ;;
+    esac
+done
